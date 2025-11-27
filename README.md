@@ -1,5 +1,7 @@
 # Medical Report Blockchain (Solidity + Hardhat + Streamlit)
 
+This is an original academic project; architecture and code written from scratch for my course.
+
 An open source **Medical Report Management & Distribution System** built on a local Ethereum blockchain.
 
 ## Features
