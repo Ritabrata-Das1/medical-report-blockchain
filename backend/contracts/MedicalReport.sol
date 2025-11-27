@@ -33,3 +33,4 @@ contract MedicalReport {
         return r;
     }
 }
+# TODO: Improve ABI loader so it handles wrong formats gracefully
