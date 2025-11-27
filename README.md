@@ -88,3 +88,103 @@ The actual medical files are **never stored on-chain**, ensuring privacy and leg
 
 ## 📁 Project Structure
 
+medical-blockchain/
+│
+├── backend/
+│ ├── contracts/
+│ │ └── MedicalReport.sol
+│ ├── scripts/
+│ │ └── deploy.js
+│ ├── hardhat.config.js
+│ ├── package.json
+│ └── contract_abi.json # Auto-generated after deployment
+│
+├── frontend/
+│ ├── app.py # Streamlit UI (Python)
+│ ├── settings.py # RPC & contract address
+│ ├── requirements.txt
+│ └── utils.py # Helper functions
+│
+└── README.md
+
+🧪 How It Works
+✔ Add Report
+
+User uploads a medical file
+
+SHA-256 hash computed
+
+Stored on-chain using smart contract
+
+Visible in the blockchain visualizer
+
+✔ Get Report
+
+User enters report index
+
+Smart contract checks:
+
+uploader access
+
+admin access
+
+doctor access
+
+Metadata + PDF receipt generated
+
+✔ Verify Report Accuracy
+
+Upload the same file → recompute SHA-256 → compare with stored hash
+
+If matches → file is authentic
+
+If different → file was modified
+
+✔ Blockchain
+
+Smart contract deployed on a private Ethereum blockchain via Hardhat.
+
+📜 License
+
+This project is released under the MIT License, making it fully open-source and allowing:
+
+✔ commercial use
+✔ modification
+✔ distribution
+✔ private use
+
+🤝 Contributing (For Improvements and suggestions)
+
+We welcome contributions from the open-source community!
+
+You can contribute by:
+
+Filing issues
+
+Reporting bugs
+
+Adding documentation
+
+Improving UI
+
+Adding features
+
+Fixing code
+
+Writing tests
+
+Improving smart contract security
+
+Contribution Workflow:
+
+Fork the repository
+
+Create a new branch
+
+Commit changes
+
+Push to your fork
+
+Open a Pull Request
+
+Every contribution will be reviewed and discussed.
