@@ -1,0 +1,17 @@
+{
+  "name": "medical-blockchain",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Medical Report Management on Ethereum (Hardhat backend)",
+  "scripts": {
+    "test": "npx hardhat test",
+    "node": "npx hardhat node",
+    "compile": "npx hardhat compile",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "export-abi": "node scripts/exportABI.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.27.0"
+  }
+}
