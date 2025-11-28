@@ -435,3 +435,4 @@ st.markdown(
 - Visualizes stored reports from contract in a chain-like UI.
 """
 )
+st.write("Upload report file below:")
