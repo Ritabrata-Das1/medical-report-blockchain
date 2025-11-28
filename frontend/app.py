@@ -344,80 +344,48 @@ with tab3:
 # TAB 4: SIMPLE VISUALIZER
 # -------------------------
 
+# ----- Blockchain Visualizer -----
 with tab4:
-    st.header("📊 Reports Visualizer (On-chain Data)")
+    st.header("Blockchain Visualizer")
+    st.write(f"Graphical representation of blocks and links (chain length: {len(blockchain.chain)})")
 
-    st.write(
-        "This tab reads the public `reports` array from the contract and "
-        "shows all stored records."
-    )
+    rows = blockchain.to_list_of_dicts()
 
-    max_reports = st.number_input(
-        "Max reports to scan (for demo, read indices 0..N-1)",
-        min_value=1,
-        max_value=200,
-        value=20,
-        step=1,
-    )
+    # Fix: Safe check (avoids off-by-one and empty list errors)
+    if not rows:
+        st.warning("No blocks to visualize yet.")
+    else:
+        html = "<div style='display:flex;align-items:center;flex-wrap:wrap;'>"
+        for i, b in enumerate(rows):
+            html += f"""
+            <div style='border:2px solid #FFD300;border-radius:10px;padding:12px;margin-right:16px;min-width:240px;background:#111111;color:#FFD300;box-shadow:0px 0px 10px #FFD300;'>
+                <b style='font-size:16px;'>Block {b['index']}</b><br/>
+                <small>Patient: {b['patient_id']}</small><br/>
+                <small>Hash: {b['hash'][:12]}...</small><br/>
+                <small>Prev: {b['previous_hash'][:12]}...</small><br/>
+                <small>Uploader: {b['uploader']}</small><br/>
+                <small>Time: {b['timestamp']}</small>
+            </div>
+            """
 
-    if st.button("Load reports from contract"):
-        rows = []
-        i = 0
-        while i < max_reports:
-            try:
-                # reports(index) is a public array getter
-                rpt = contract.functions.reports(i).call()
-                patient_id, report_hash, description, timestamp, uploader = rpt
-                ts_human = datetime.utcfromtimestamp(timestamp).isoformat()
-                rows.append(
-                    {
-                        "index": i,
-                        "patientId": patient_id,
-                        "reportHash": report_hash,
-                        "description": description,
-                        "timestamp_utc": ts_human,
-                        "uploader": uploader,
-                    }
-                )
-                i += 1
-            except Exception:
-                # Assume we've reached the end of stored reports
-                break
+            # Corrected condition
+            if i < len(rows) - 1:
+                html += "<div style='font-size:32px;margin-right:16px;color:#FFD300;'>➡️</div>"
 
-        if not rows:
-            st.warning("No reports found (or all indices beyond stored length).")
-        else:
-            df = pd.DataFrame(rows)
-            st.dataframe(df, use_container_width=True)
+        html += "</div>"
 
-            # Simple "chain" visualization (not real blocks, but logical records)
-            html = "<div style='display:flex;flex-wrap:wrap;align-items:center;'>"
-            for idx, row in enumerate(rows):
-                html += f"""
-                <div style="
-                    border:2px solid #333;
-                    border-radius:10px;
-                    padding:10px;
-                    margin:6px;
-                    min-width:220px;
-                    background:#111827;
-                    color:#e5e7eb;
-                    box-shadow:0 0 8px rgba(0,0,0,0.4);
-                ">
-                    <b>Report #{row['index']}</b><br/>
-                    <small>Patient: {row['patientId']}</small><br/>
-                    <small>Desc: {row['description']}</small><br/>
-                    <small>Uploader: {row['uploader'][:10]}...</small><br/>
-                    <small>Hash: {row['reportHash'][:12]}...</small><br/>
-                    <small>Time: {row['timestamp_utc']}</small><br/>
-                </div>
-                """
-                if idx < len(rows) - 1:
-                    html += "<div style='font-size:28px;margin:6px;'>➡️</div>"
-            html += "</div>"
+        st.components.v1.html(html, height=260)
 
-            st.markdown("### Logical Chain View")
-            st.components.v1.html(html, height=300, scrolling=True)
+    # Table view
+    df = pd.DataFrame(rows)
+    st.subheader("Detailed Block Table")
+    st.dataframe(df, use_container_width=True)
+
+    valid, msg = blockchain.is_valid_chain()
+    if valid:
+        st.success("Chain validation: " + msg)
+    else:
+        st.error("Chain error: " + msg)
 
 # -------------------------
 # FOOTER
