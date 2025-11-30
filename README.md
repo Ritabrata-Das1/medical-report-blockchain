@@ -1,190 +1,234 @@
-# Medical Report Management & Distribution System (Open Source Project)
 
-A fully open-source, blockchain-powered system for securely storing medical report hashes, managing doctor access permissions, and providing a transparent audit trail — implemented using **Solidity**, **Ethereum (Hardhat)**, and a **Python + Streamlit frontend**.
+# 🚀 **Medical Report Blockchain Manager (Open Source Project)**
 
-This project is created as part of an Open Source Software assignment and is licensed under the **MIT License**, allowing anyone to use, modify, and contribute.
-
----
-
-## ⚡ Project Overview
-
-The Medical Report Management System is an innovative open-source solution designed to address the challenges in secure medical data handling.  
-Traditional healthcare systems suffer from:
-
-- tampering or alteration of medical records  
-- unauthorized access to patient data  
-- lack of audit trails  
-- difficulty in verifying authenticity  
-
-This project solves these issues by storing **cryptographic hashes** of reports on a blockchain and implementing an access-controlled verification system.
-
-The actual medical files are **never stored on-chain**, ensuring privacy and legal compliance (HIPAA-friendly approach).
+Secure medical report storage & permission-controlled access using Blockchain + Hardhat + Python Streamlit.
 
 ---
 
-## 🚀 Features
+## 📌 **Overview**
 
-### 🔐 Core Blockchain Features  
-- **Private Ethereum Blockchain** (Hardhat local node)  
-- **Smart Contract** for:
-  - Adding medical report hashes  
-  - Granting doctor access  
-  - Revoking access  
-  - Retrieving report metadata  
-- **Immutable audit trail** using blockchain blocks  
-- **Chain validation**  
+The **Medical Report Blockchain Manager** is an open-source project designed to securely manage medical reports using blockchain technology.
+It ensures **tamper-proof** storage of report hashes, **fine-grained access control**, and an easy-to-use **frontend interface** for hospitals, doctors, and patients.
 
-### 🧪 Report Management Features  
-- SHA-256 hashing of uploaded files  
-- Ability to verify if a report has been altered  
-- PDF receipt containing:
-  - Block Index  
-  - Patient ID  
-  - Timestamp  
-  - Uploader wallet  
-  - Stored report hash  
-
-### 🧑‍⚕️ Access Control  
-- Per-patient access list managed through the smart contract  
-- Doctors only read report metadata if permission is granted  
-
-### 💻 Frontend UI (Streamlit)  
-- Easy-to-use dashboard  
-- Add report  
-- Manage doctor access  
-- Retrieve report metadata  
-- Visual chain explorer  
-
-### 🌐 Open Source Qualities  
-- Active GitHub repository  
-- MIT License  
-- Clean architecture  
-- Maintainer guidelines  
-- Ready for community contributions  
+This project demonstrates blockchain’s real-world application in healthcare, while being simple enough for academic and OSS contribution purposes.
 
 ---
 
-## 🏗 Tech Stack
+## ⭐ **Key Features**
 
-### **Backend (Blockchain & Smart Contract)**
-- **Solidity**
-- **Hardhat**
-- **Ethers.js**
-- **Local Ethereum Node (npx hardhat node)**
+### 🔐 Core (Blockchain)
+
+* Store report metadata securely on the blockchain
+* SHA-256 hashing for tamper detection
+* Private Hardhat local blockchain
+* Smart Contract (Solidity) with:
+
+  * `addReport`
+  * `getReport`
+  * `grantAccess`
+  * `revokeAccess`
+
+### 🖥️ Frontend (Python + Streamlit)
+
+* Add a report (upload any file → hash computed)
+* View reports (permission enforced)
+* Manage doctor access
+* Blockchain visualizer (linked blocks)
+* File hash verification
+* Activity log
+* PDF receipt generation (optional)
+
+### 🎯 Extra OSS Features
+
+
+* Cleaner UI improvements
+* Modular code for future extensions
+
+---
+
+## 🧰 **Tech Stack**
+
+### **Blockchain / Backend**
+
+* **Solidity** – smart contracts
+* **Hardhat** – contract compilation, local blockchain, deployment
+* **Node.js + NPM** – project management
+* **Ethers.js** – contract interaction
+* **JSON ABI Export** – used by Streamlit frontend
 
 ### **Frontend**
-- **Python 3.11**
-- **Streamlit**
-- **Requests / JSON-RPC**
-- **PDF generation**
-- **SHA-256 hashing**
 
-### **Other Tools**
-- Git & GitHub  
-- MIT License  
-- GitHub Desktop / CLI  
+* **Python 3.11+**
+* **Streamlit** – UI framework
+* **reportlab** (optional) – PDF generation
+* **requests, web3.py** – interact with Hardhat node
 
 ---
 
-## 📁 Project Structure
+## 📁 **Project Structure**
 
+```
 medical-blockchain/
 │
-├── backend/
-│ ├── contracts/
-│ │ └── MedicalReport.sol
-│ ├── scripts/
-│ │ └── deploy.js
-│ ├── hardhat.config.js
-│ ├── package.json
-│ └── contract_abi.json # Auto-generated after deployment
+├── backend/                 # Hardhat + Smart Contracts
+│   ├── contracts/
+│   │   └── MedicalReport.sol
+│   ├── scripts/
+│   │   └── deploy.js
+│   ├── contract_abi.json
+│   ├── hardhat.config.js
+│   └── package.json
 │
-├── frontend/
-│ ├── app.py # Streamlit UI (Python)
-│ ├── settings.py # RPC & contract address
-│ ├── requirements.txt
-│ └── utils.py # Helper functions
+├── frontend/                # Python Streamlit UI
+│   ├── app.py
+│   ├── settings.py
+│   ├── utils.py
+│   └── requirements.txt
 │
 └── README.md
+```
 
-🧪 How It Works
-✔ Add Report
+---
 
-User uploads a medical file
+## ⚙️ **Installation & Setup**
 
-SHA-256 hash computed
+### **1️⃣ Backend Setup (Hardhat)**
 
-Stored on-chain using smart contract
+```
+cd backend
+npm install --legacy-peer-deps
+npx hardhat compile
+npx hardhat node
+```
 
-Visible in the blockchain visualizer
+### **2️⃣ Deploy Contract**
 
-✔ Get Report
+Open a new terminal:
 
-User enters report index
+```
+cd backend
+npx hardhat run scripts/deploy.js --network localhost
+```
 
-Smart contract checks:
+This generates:
 
-uploader access
+✔ Contract address
+✔ `contract_abi.json` file
 
-admin access
+---
 
-doctor access
+### **3️⃣ Frontend Setup (Streamlit)**
 
-Metadata + PDF receipt generated
+```
+cd frontend
+pip install -r requirements.txt
+streamlit run app.py
+```
 
-✔ Verify Report Accuracy
+---
 
-Upload the same file → recompute SHA-256 → compare with stored hash
+## 🔗 How Components Work Together
 
-If matches → file is authentic
+1. The user interacts through **Streamlit (app.py)**
+2. Streamlit uses **web3.py** to call the deployed **Solidity contract**
+3. Contract stores **tamper-proof hashes** on blockchain
+4. Access control ensures only authorized doctors can view records
+5. Blockchain visualizer shows linked block data
 
-If different → file was modified
+---
 
-✔ Blockchain
+## 🧪 **Testing**
 
-Smart contract deployed on a private Ethereum blockchain via Hardhat.
+Unit tests you can perform:
 
-📜 License
+### ✔ Add Report Test
 
-This project is released under the MIT License, making it fully open-source and allowing:
+Upload `bloodtest.pdf` → get SHA-256 hash → stored in blockchain
 
-✔ commercial use
-✔ modification
-✔ distribution
-✔ private use
+### ✔ Access Denied Test
 
-🤝 Contributing (For Improvements and suggestions)
+Login as Doctor_2 → attempt to access → “Access Denied”
 
-We welcome contributions from the open-source community!
+### ✔ Access Granted Test
 
-You can contribute by:
+Hospital_A → grant access → Doctor_1 → “Access Granted”
 
-Filing issues
+### ✔ Chain Validation Test
 
-Reporting bugs
+Streamlit visualizer → “Chain Valid”
 
-Adding documentation
+### ✔ Hash Verification Test
 
-Improving UI
+Reupload file → hash matches → proves authenticity
 
-Adding features
+---
 
-Fixing code
+## 🤝 **Contributing Guidelines (For OSS Project)**
 
-Writing tests
+This project welcomes open-source contributions.
 
-Improving smart contract security
+### ✔ 1. Fork the Repository
 
-Contribution Workflow:
+Click **Fork** → create copy in your GitHub.
 
-Fork the repository
+### ✔ 2. Clone
 
-Create a new branch
+```
+git clone <your-fork-url>
+```
 
-Commit changes
+### ✔ 3. Create a Branch
 
-Push to your fork
+```
+git checkout -b fix-ui-color
+```
 
-Open a Pull Request
+### ✔ 4. Make Changes
 
-Every contribution will be reviewed and discussed.
+Examples of valid contributions:
+
+* Bug fixes
+* UI improvements
+* Refactoring backend
+* Improve smart contract
+* Add comments / docs
+* Create tests
+
+### ✔ 5. Commit
+
+```
+git commit -m "Fix: Improved UI contrast in blockchain visualizer"
+```
+
+### ✔ 6. Push
+
+```
+git push origin fix-ui-color
+```
+
+### ✔ 7. Open Pull Request
+
+Go to GitHub → Open PR
+A maintainer (you or reviewer) leaves feedback or merges.
+
+---
+
+## 📜 **License**
+
+Licensed under the **MIT License**, allowing:
+
+* Personal + commercial use
+* Modification
+* Redistribution
+
+---
+
+## 🧾 **Maintainer**
+
+**Your Name**
+Open-source contributor
+(Replace with your details)
+
+---
+
+
